@@ -14,7 +14,7 @@ app.use(express.json()); // ✅ Enable JSON parsing
 
 // ✅ CORS Middleware should be placed **before routes**
 app.use(cors({
-  origin: ["http://localhost:3000", "https://your-frontend.com"], // Add frontend URL here
+  origin: ["http://localhost:3000", "https://neellakalyansai.netlify.app/"], // Add frontend URL here
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Required for authentication (cookies, sessions)
 }));
@@ -23,12 +23,12 @@ app.use(cors({
 app.use("/api", require("./Routes/portfolioRoutes")); 
 
 // ✅ Handle React frontend (ONLY if hosted on the same backend)
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/front-end/build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "/front-end/build", "index.html"));
-  });
-}
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "/front-end/build")));
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.join(__dirname, "/front-end/build", "index.html"));
+//   });
+// }
 
 // ✅ Start the server
 app.listen(port, () => {
