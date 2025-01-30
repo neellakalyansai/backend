@@ -1,9 +1,8 @@
 [build]
-  command = "npm install && cd front-end && npm install && npm run build"
+  command = "npm install"
   functions = "functions"
-  publish = "front-end/build"
 
 [[redirects]]
   from = "/api/*"
-  to = "/.netlify/functions/api"
+  to = "/.netlify/functions/server"
   status = 200
