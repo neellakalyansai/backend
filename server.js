@@ -12,23 +12,28 @@ require("./Models/portfolio-model");
 
 app.use(express.json()); // ✅ Enable JSON parsing
 
-// ✅ CORS Middleware should be placed **before routes**
-app.use(cors({
-  origin: ["http://localhost:3000", "https://neellakalyansai.netlify.app/"], // Add frontend URL here
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true, // Required for authentication (cookies, sessions)
-}));
+// ✅ Move CORS Middleware Before Any Routes
+const allowedOrigins = ["http://localhost:3000", "https://neellakalyansai.netlify.app"];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
+
+  // Handle OPTIONS preflight requests
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  
+  next();
+});
 
 // ✅ Ensure API Routes Have /api Prefix
-app.use("/api", require("./Routes/portfolioRoutes")); 
-
-// ✅ Handle React frontend (ONLY if hosted on the same backend)
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "/front-end/build")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "/front-end/build", "index.html"));
-//   });
-// }
+app.use("/api", require("./Routes/portfolioRoutes"));
 
 // ✅ Start the server
 app.listen(port, () => {
