@@ -10,7 +10,9 @@ require('./Models/user-model');
 require('./Models/portfolio-model');
 
 app.use(express.json());
-app.use(require('./Routes/portfolioRoutes'));
+// app.use(require('./Routes/portfolioRoutes'));/
+app.use("/api", require("./Routes/portfolioRoutes")); // Prefix all routes with /api
+
 // app.use(cors({
 //   origin: '*'
 // }));
