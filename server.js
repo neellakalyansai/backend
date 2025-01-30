@@ -1,46 +1,36 @@
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+require("dotenv").config();
+const dbconfig = require("./dbconfig");
+
 const app = express();
-require('dotenv').config();
-const dbconfig = require('./dbconfig');
 const port = process.env.PORT || 5000;
-const path = require('path');
-const cors = require('cors');
 
-require('./Models/user-model');
-require('./Models/portfolio-model');
+require("./Models/user-model");
+require("./Models/portfolio-model");
 
-app.use(express.json());
-// app.use(require('./Routes/portfolioRoutes'));/
-app.use("/api", require("./Routes/portfolioRoutes")); // Prefix all routes with /api
+app.use(express.json()); // ✅ Enable JSON parsing
 
-// app.use(cors({
-//   origin: '*'
-// }));
-// Allow requests from your frontend domain
+// ✅ CORS Middleware should be placed **before routes**
 app.use(cors({
-  origin: "http://localhost:3000", // Change this to match your frontend URL
+  origin: ["http://localhost:3000", "https://your-frontend.com"], // Add frontend URL here
   methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  credentials: true, // Required for authentication (cookies, sessions)
 }));
 
-__dirname = path.resolve();
+// ✅ Ensure API Routes Have /api Prefix
+app.use("/api", require("./Routes/portfolioRoutes")); 
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "/front-end")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.join(__dirname, "front-end", "build", "index.html"));
-//   });
-// }
+// ✅ Handle React frontend (ONLY if hosted on the same backend)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/front-end/build")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "/front-end/build", "index.html"));
+  });
+}
 
-// const get = async () => {
-//   const result = await fetch('https://varisrajak.onrender.com/')
-//   console.log(result);
-// }
-
-setInterval(() => {
-  get();
-}, 300000);
-
+// ✅ Start the server
 app.listen(port, () => {
-  console.log('App listening on port ' + port);
+  console.log(`Server running on port ${port}`);
 });
