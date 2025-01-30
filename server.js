@@ -16,7 +16,7 @@ app.use(require('./Routes/portfolioRoutes'));
 // }));
 // Allow requests from your frontend domain
 app.use(cors({
-  origin: "https://kalyansai.netflify.app", // Change this to match your frontend URL
+  origin: "http://localhost:3000", // Change this to match your frontend URL
   methods: "GET,POST,PUT,DELETE",
   credentials: true
 }));
